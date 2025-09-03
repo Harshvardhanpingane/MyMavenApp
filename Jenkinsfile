@@ -43,18 +43,11 @@ pipeline {
         stage('Deploy to Tomcat') {
             steps {
                 script {
-                   // फक्त WAR filename मिळवा
-                    def warFile = bat(
-                        script: 'for %i in (target\\*.war) do @echo %~nxi',
-                        returnStdout: true
-                    ).trim()
-
-            // curl command योग्य path ने वापरा
-                bat """
-                    curl -u ${env.TOMCAT_USER}:${env.TOMCAT_PASS} ^
-                    --upload-file target\\${warFile} ^
-                    "${env.TOMCAT_URL}/deploy?path=/pipelineapp&update=true"
-                """
+                    bat """
+                        curl -v -u admin:admin123 ^
+                        --upload-file target\\MyMavenApp.war ^
+                        "http://localhost:8080/manager/text/deploy?path=/pipelineapp&update=true"
+                    """
                 }
             }
         }
