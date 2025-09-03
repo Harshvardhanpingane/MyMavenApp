@@ -22,7 +22,7 @@ pipeline {
 
         stage('Build with Maven') {
             steps {
-                bat 'mvn clean package'
+                bat '"C:\\apache-maven-3.9.11\\bin\\mvn" clean package'
             }
         }
 
