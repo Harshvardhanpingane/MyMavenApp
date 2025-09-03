@@ -20,22 +20,31 @@ pipeline {
             }
         }
 
+        stage('Verify Tools') {
+            steps {
+                script {
+                    echo "Maven Path: ${tool 'Maven 3.9.11'}"
+                    echo "JAVA_HOME: ${tool 'JDK-17'}"
+                    bat 'java -version'
+                    bat 'mvn -version'
+                }
+            }
+        }
+        
         stage('Build with Maven') {
             steps {
-                bat '"C:\\apache-maven-3.9.11\\bin\\mvn" clean package'
+                 script {
+                    def mvnHome = tool 'Maven 3.9.11'
+                    bat "\"${mvnHome}\\bin\\mvn\" clean package"
+                 }
             }
         }
 
         stage('Deploy to Tomcat') {
             steps {
                 script {
-                    // Windows command to get WAR file
-                    def warFile = bat(script: 'dir /b target\\*.war', returnStdout: true).trim()
-                    bat """
-                        curl -u %TOMCAT_USER%:%TOMCAT_PASS% ^
-                        --upload-file target\\${warFile} ^
-                        "%TOMCAT_URL%/deploy?path=/pipelineapp&update=true"
-                    """
+                   def warFile = bat(script: 'dir /b target\\*.war', returnStdout: true).trim()
+                    bat "curl -u ${env.TOMCAT_USER}:${env.TOMCAT_PASS} --upload-file target\\${warFile} \"${env.TOMCAT_URL}/deploy?path=/pipelineapp&update=true\""
                 }
             }
         }
