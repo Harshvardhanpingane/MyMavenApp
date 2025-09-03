@@ -2,8 +2,8 @@ pipeline {
     agent any
     
     tools {
-        maven 'Maven 3.9.11'  // Define Maven tool installed in Jenkins
-        jdk 'JDK-17'    // Define JDK installed in Jenkins
+        maven 'Maven 3.9.11'
+        jdk 'JDK-17'
     }
 
     environment {
@@ -22,18 +22,19 @@ pipeline {
 
         stage('Build with Maven') {
             steps {
-                sh 'mvn clean package'
+                bat 'mvn clean package'
             }
         }
 
         stage('Deploy to Tomcat') {
             steps {
                 script {
-                    def warFile = sh(script: "ls target/*.war", returnStdout: true).trim()
-                    sh """
-                        curl -u $TOMCAT_USER:$TOMCAT_PASS \
-                        --upload-file $warFile \
-                        "$TOMCAT_URL/deploy?path=/pipelineapp&update=true"
+                    // Windows command to get WAR file
+                    def warFile = bat(script: 'dir /b target\\*.war', returnStdout: true).trim()
+                    bat """
+                        curl -u %TOMCAT_USER%:%TOMCAT_PASS% ^
+                        --upload-file target\\${warFile} ^
+                        "%TOMCAT_URL%/deploy?path=/pipelineapp&update=true"
                     """
                 }
             }
