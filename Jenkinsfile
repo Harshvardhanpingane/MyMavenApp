@@ -43,8 +43,18 @@ pipeline {
         stage('Deploy to Tomcat') {
             steps {
                 script {
-                   def warFile = bat(script: 'dir /b target\\*.war', returnStdout: true).trim()
-                    bat "curl -u ${env.TOMCAT_USER}:${env.TOMCAT_PASS} --upload-file target\\${warFile} \"${env.TOMCAT_URL}/deploy?path=/pipelineapp&update=true\""
+                   // फक्त WAR filename मिळवा
+                    def warFile = bat(
+                        script: 'for %i in (target\\*.war) do @echo %~nxi',
+                        returnStdout: true
+                    ).trim()
+
+            // curl command योग्य path ने वापरा
+                bat """
+                    curl -u ${env.TOMCAT_USER}:${env.TOMCAT_PASS} ^
+                    --upload-file target\\${warFile} ^
+                    "${env.TOMCAT_URL}/deploy?path=/pipelineapp&update=true"
+                """
                 }
             }
         }
