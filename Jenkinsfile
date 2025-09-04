@@ -50,7 +50,7 @@ pipeline {
             post {
                 always {
                     // Surefire XML report path
-                    junit 'MyMavenApp/target/surefire-reports/*.xml'
+                    junit "${env.WORKSPACE}/target/surefire-reports/*.xml"
                 }
             }
         }
@@ -62,7 +62,7 @@ pipeline {
                 script {
                     bat """
                         curl -v -u admin:admin123 ^
-                        --upload-file MyMavenApp\\target\\MyMavenApp.war
+                        --upload-file target\\MyMavenApp.war ^
                         "http://localhost:8080/manager/text/deploy?path=/pipelineapp&update=true"
                     """
                 }
