@@ -62,7 +62,7 @@ pipeline {
                 script {
                     bat """
                         curl -v -u admin:admin123 ^
-                        --upload-file target\\MyMavenApp.war ^
+                        --upload-file MyMavenApp\\target\\MyMavenApp.war
                         "http://localhost:8080/manager/text/deploy?path=/pipelineapp&update=true"
                     """
                 }
