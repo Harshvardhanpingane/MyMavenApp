@@ -50,7 +50,7 @@ pipeline {
             post {
                 always {
                     // Surefire XML report path
-                    junit 'target/surefire-reports/*.xml'
+                    junit 'MyMavenApp/target/surefire-reports/*.xml'
                 }
             }
         }
