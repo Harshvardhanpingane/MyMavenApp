@@ -1,6 +1,6 @@
 pipeline {
     agent any
-    
+
     tools {
         maven 'Maven 3.9.11'
         jdk 'JDK-17'
@@ -30,13 +30,13 @@ pipeline {
                 }
             }
         }
-        
+
         stage('Build with Maven') {
             steps {
-                 script {
+                script {
                     def mvnHome = tool 'Maven 3.9.11'
                     bat "\"${mvnHome}\\bin\\mvn\" clean package"
-                 }
+                }
             }
         }
 
@@ -49,21 +49,19 @@ pipeline {
             }
             post {
                 always {
-                    // Surefire XML report path
-                    junit "${env.WORKSPACE}/target/surefire-reports/*.xml"
+                    // Fixed JUnit report path
+                    junit 'target/surefire-reports/*.xml'
                 }
             }
         }
-
-
 
         stage('Deploy to Tomcat') {
             steps {
                 script {
                     bat """
-                        curl -v -u admin:admin123 ^
+                        curl -v -u ${TOMCAT_USER}:${TOMCAT_PASS} ^
                         --upload-file target\\MyMavenApp.war ^
-                        "http://localhost:8080/manager/text/deploy?path=/pipelineapp&update=true"
+                        "${TOMCAT_URL}/deploy?path=/pipelineapp&update=true"
                     """
                 }
             }
