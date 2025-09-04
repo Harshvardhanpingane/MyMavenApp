@@ -2,8 +2,8 @@ pipeline {
     agent any
     
     tools {
-        maven 'Maven3'
-        jdk 'Java11'
+        maven 'Maven 3.9.11'
+        jdk 'JDK-17'
     }
 
     environment {
@@ -14,7 +14,7 @@ pipeline {
         stage('Checkout') {
             steps {
                 git branch: 'main',
-                    url: 'https://github.com/<your-repo>.git'
+                    url: 'https://github.com/Harshvardhanpingane/MyMavenApp.git'
             }
         }
 
