@@ -40,6 +40,21 @@ pipeline {
             }
         }
 
+        stage('Run Tests') {
+            steps {
+                script {
+                    def mvnHome = tool 'Maven 3.9.11'
+                    bat "\"${mvnHome}\\bin\\mvn\" test"
+                }
+            }
+        post {
+            always {
+                junit 'target/surefire-reports/*.xml'
+            }
+        }
+    }
+
+
         stage('Deploy to Tomcat') {
             steps {
                 script {
