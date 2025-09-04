@@ -47,12 +47,14 @@ pipeline {
                     bat "\"${mvnHome}\\bin\\mvn\" test"
                 }
             }
-        post {
-            always {
-                junit 'target/surefire-reports/*.xml'
+            post {
+                always {
+                    // Surefire XML report path
+                    junit 'target/surefire-reports/*.xml'
+                }
             }
         }
-    }
+
 
 
         stage('Deploy to Tomcat') {
